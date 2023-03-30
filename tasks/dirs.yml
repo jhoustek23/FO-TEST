@@ -10,13 +10,13 @@
     - logs
     - app-logs
 
-- name: Create DB dirs
-  file:
-    path: {{ item }}
-    state: directory
-    recurse: yes
-  with_items:
-    - '/mnt/ssd/data/postgresql-docker/fo-db-14/data'
-    - '/mnt/hdd/postgres/karton-fo'
-    - '/mnt/hdd/postgres/tablespaces/karton-fo-old'
-    - '/var/log/postgresql/fo-testuat'
+#- name: Create DB dirs
+#  file:
+#    path: {{ item }}
+#    state: directory
+#    recurse: yes
+#  with_items:
+#    - '/mnt/ssd/data/postgresql-docker/fo-db-14/data'
+#    - '/mnt/hdd/postgres/karton-fo'
+#    - '/mnt/hdd/postgres/tablespaces/karton-fo-old'
+#    - '/var/log/postgresql/fo-testuat'
