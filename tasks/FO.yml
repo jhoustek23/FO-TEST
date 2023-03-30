@@ -1,0 +1,50 @@
+---
+- name: karton-fo-test
+  community.docker.docker_compose:
+    project_name: karton-fo-test
+    definition:
+      karton-fo-test:
+        image: docker-registry.dateio.eu/tomcat:v1
+        container_name: karton-fo-test
+        restart: always
+        environment:
+          TZ: Europe/Prague
+          JAVA_OPTS: "-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+          CATALINA_OPTS: >-
+            -Xms400M
+            -Xmx1000M
+            -Dlog4j2.formatMsgNoLookups=true
+            -server
+            -XX:+UseG1GC
+            -XX:+HeapDumpOnOutOfMemoryError
+            -XX:HeapDumpPath=/usr/local/tomcat/temp/heapdump.bin
+            -XX:+PrintGCDetails
+            -XX:+PrintGCDateStamps
+            -Xloggc:/usr/local/tomcat/logs/gc-%t.log
+            -XX:+UseGCLogFileRotation
+            -XX:NumberOfGCLogFiles=10
+            -XX:GCLogFileSize=50M
+            -Dcom.sun.management.jmxremote
+            -Dcom.sun.management.jmxremote.authenticate=true
+            -Dcom.sun.management.jmxremote.ssl=false
+            -Dcom.sun.management.jmxremote.port=34004
+            -Dcom.sun.management.jmxremote.rmi.port=34004
+            -Dcom.sun.management.jmxremote.password.file=/usr/local/tomcat/conf/jmx.password
+            -Dcom.sun.management.jmxremote.access.file=/usr/local/tomcat/conf/jmx.access
+            -Djava.rmi.server.hostname=10.0.0.99
+      # Vsechny nove vytvorene soubory maji  prava "rw-r--r--", coz vyuzijeme:
+      # - logy jsou viditelne i pro jine uzivatele nez root
+        cap_add:
+      # enable jstack
+        - SYS_PTRACE
+        hostname: docker
+        ports:
+        - 10.0.0.99:8090:8090
+      # useful only for profiler connections (see CATALINA_OPTS upwards)
+        - 10.0.0.99:34004:34004
+        volumes:
+        - /opt/docker/app/fo:/opt/docker/app/fo
+        - /opt/tomcat/tomcat-fo-test/webapps:/usr/local/tomcat/webapps
+        - /opt/tomcat/tomcat-fo-test/conf:/usr/local/tomcat/conf
+        - /opt/tomcat/tomcat-fo-test/logs:/usr/local/tomcat/logs
+        - /opt/tomcat/tomcat-fo-test/app-logs:/usr/local/tomcat/app-logs

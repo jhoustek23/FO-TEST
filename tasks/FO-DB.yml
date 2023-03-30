@@ -1,0 +1,20 @@
+---
+- name: db-fo
+  community.docker.docker_compose:
+    project_name: db-fo
+    definition:
+      db-fo:
+        image: docker-registry.dateio.eu/postgres-14-londiste:v3
+        container_name: karton-db-fo
+        restart: always
+        environment:
+          TZ: Europe/Prague
+      # docasne heslo pro uzivatele postgres (bude mu nastaveno), pouzije se jen pri vytvoreni noveho clusteru
+          POSTGRES_PASSWORD: aaaaaa
+        volumes:
+          - /mnt/ssd/data/postgresql-docker/fo-db-14/data:/var/lib/postgresql/data
+          - /mnt/hdd/postgres/karton-fo:/var/lib/postgresql/data_hdd
+          - /mnt/hdd/postgres/tablespaces/karton-fo-old:/var/lib/postgresql/data-old
+          - /var/log/postgresql/fo-testuat:/var/log/postgresql
+        ports:
+          - 10.0.0.99:5433:5432

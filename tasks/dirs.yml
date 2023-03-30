@@ -1,0 +1,11 @@
+---
+- name: Create
+  file:
+    path: /opt/tomcat/tomcat-fo-test/{{ item }}
+    state: directory
+    recurse: yes
+  with_items:
+    - webapps
+    - conf
+    - logs
+    - app-logs
